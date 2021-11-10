@@ -18,4 +18,5 @@ apply from: '../build.dependencies.gradle'
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+    implementation fileTree(dir: '../FTC_21-22/out/lib', include: ['*.aar', '*.jar'], exclude: [])
 }
