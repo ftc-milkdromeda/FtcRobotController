@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,7 +10,7 @@ import Framework.MecanumAlg.DriveTrainDriver;
 import Framework.MecanumAlg.MecanumAlg;
 import Framework.Units.AngleUnits;
 
-//@Disabled
+@Disabled
 @TeleOp(name = "TestDriveTrain")
 public class DriveTrainTestOpMode extends LinearOpMode {
     @Override
@@ -22,8 +22,6 @@ public class DriveTrainTestOpMode extends LinearOpMode {
 
         motor0.setDirection(DcMotorSimple.Direction.REVERSE);
         motor1.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor3.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,7 +34,7 @@ public class DriveTrainTestOpMode extends LinearOpMode {
 
         while(super.opModeIsActive()) {
             double x = super.gamepad1.left_stick_x;
-            double y = -super.gamepad1.left_stick_y;
+            double y = super.gamepad1.left_stick_y;
             double w = super.gamepad1.right_stick_x;
 
             double mag = Math.sqrt(x*x + y*y);
