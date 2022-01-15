@@ -12,6 +12,7 @@ public enum DriverDirectory implements DriverType {
     CAPSTONE_HELPER,
     GAMEPAD,
     CAROUSEL,
+    CAMERA,
     LENGTH
     ;
 
