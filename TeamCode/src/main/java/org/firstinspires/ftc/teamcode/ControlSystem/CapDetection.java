@@ -40,7 +40,7 @@ public class CapDetection extends Task {
             return;
         }
 
-        error = imageSet[0].saveImage("CapDetection-0");
+        error = imageSet[0].saveImage(path + "Initial");
         if(error != GeneralError.NO_ERROR) {
             this.callBack.call(Position.NO_POS);
             super.setExitState(error);
@@ -62,6 +62,13 @@ public class CapDetection extends Task {
                 return;
             }
 
+            error = imageSet[i].saveImage(path + "inter" + i);
+            if(error != GeneralError.NO_ERROR) {
+                this.callBack.call(Position.NO_POS);
+                super.setExitState(error);
+                return;
+            }
+
             Pixel brightest = imageSet[i].findBrightest();
             Pixel dimmest = imageSet[i].findDimmest();
 
@@ -74,18 +81,19 @@ public class CapDetection extends Task {
                 return;
             }
 
-            error = imageSet[i].saveImage("CapDetection-" + i);
+            error = imageSet[i].saveImage(path + "Final" + i);
             if(error != GeneralError.NO_ERROR) {
                 this.callBack.call(Position.NO_POS);
                 super.setExitState(error);
                 return;
             }
+
         }
 
-        int[] imagePixelCount = {
-                (int) ((double) this.countBlackPixel(imageSet[0]) / this.config.getPos(0).countCutoff),
-                (int) ((double) this.countBlackPixel(imageSet[1]) / this.config.getPos(1).countCutoff),
-                (int) ((double) this.countBlackPixel(imageSet[2]) / this.config.getPos(2).countCutoff)
+        double[] imagePixelCount = {
+                ((double) this.countBlackPixel(imageSet[0]) / this.config.getPos(0).countCutoff),
+                ((double) this.countBlackPixel(imageSet[1]) / this.config.getPos(1).countCutoff),
+                ((double) this.countBlackPixel(imageSet[2]) / this.config.getPos(2).countCutoff)
         };
 
         Position pos = this.config.failurePos;
@@ -115,6 +123,8 @@ public class CapDetection extends Task {
 
     private final double colorCutoffFactor  = 0.5;
     private final int countCutoff = 100;
+    private final String path = "";
+    //todo set path
 
     public static class CapConfiguration {
         public CapConfiguration(Coordinate pos1, Coordinate pos2, Coordinate pos3, Position failurePos) {
@@ -127,9 +137,9 @@ public class CapDetection extends Task {
 
         public Coordinate getPos(int index) {
             switch (index) {
-                case 1: return this.pos1;
-                case 2: return this.pos1;
-                case 3: return this.pos1;
+                case 0: return this.pos1;
+                case 1: return this.pos2;
+                case 2: return this.pos3;
                 default: return null;
             }
         }
@@ -141,12 +151,12 @@ public class CapDetection extends Task {
         public final Position failurePos;
     }
     public static class Coordinate {
-        public Coordinate(int x, int y, int xOff, int yOff, int countCutoff) {
-            this.x0  = x;
-            this.y0  = y;
+        public Coordinate(int x0, int y0, int x1, int y1, int countCutoff) {
+            this.x0  = x0;
+            this.y0  = y0;
 
-            this.x1  = x + xOff;
-            this.y1  = y + yOff;
+            this.x1  = x1;
+            this.y1  = y1;
 
             this.countCutoff = countCutoff;
         }
@@ -158,6 +168,8 @@ public class CapDetection extends Task {
         public final int y1;
 
         public final int countCutoff;
+
+        public final double countCutoffPercent = 0.7;
 
     }
 
