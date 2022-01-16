@@ -83,15 +83,15 @@ public class CapDetection extends Task {
         }
 
         int[] imagePixelCount = {
-                this.countBlackPixel(imageSet[0]),
-                this.countBlackPixel(imageSet[1]),
-                this.countBlackPixel(imageSet[2])
+                (int) ((double) this.countBlackPixel(imageSet[0]) / this.config.getPos(0).countCutoff),
+                (int) ((double) this.countBlackPixel(imageSet[1]) / this.config.getPos(1).countCutoff),
+                (int) ((double) this.countBlackPixel(imageSet[2]) / this.config.getPos(2).countCutoff)
         };
 
-        Position pos = Position.POS1;
+        Position pos = this.config.failurePos;
 
-        for(int i = 1; i < imagePixelCount.length; i++)
-            pos = imagePixelCount[pos.getValue()] < imagePixelCount[i] ? Position.getPos(i) : pos;
+        for(int i = 0; i < imagePixelCount.length; i++)
+            pos = imagePixelCount[i] >=1 && imagePixelCount[pos.getValue()] < imagePixelCount[i] ? Position.getPos(i) : pos;
 
         this.callBack.call(imagePixelCount[pos.getValue()] > this.countCutoff ? pos : Position.NO_POS);
         this.setExitState(GeneralError.NO_ERROR);
@@ -117,10 +117,12 @@ public class CapDetection extends Task {
     private final int countCutoff = 100;
 
     public static class CapConfiguration {
-        public CapConfiguration(Coordinate pos1, Coordinate pos2, Coordinate pos3) {
+        public CapConfiguration(Coordinate pos1, Coordinate pos2, Coordinate pos3, Position failurePos) {
             this.pos1 = pos1;
             this.pos2 = pos2;
             this.pos3 = pos3;
+
+            this.failurePos = failurePos;
         }
 
         public Coordinate getPos(int index) {
@@ -132,17 +134,21 @@ public class CapDetection extends Task {
             }
         }
 
-        Coordinate pos1;
-        Coordinate pos2;
-        Coordinate pos3;
+        public final Coordinate pos1;
+        public final Coordinate pos2;
+        public final Coordinate pos3;
+
+        public final Position failurePos;
     }
     public static class Coordinate {
-        public Coordinate(int x, int y, int xOff, int yOff) {
+        public Coordinate(int x, int y, int xOff, int yOff, int countCutoff) {
             this.x0  = x;
             this.y0  = y;
 
             this.x1  = x + xOff;
             this.y1  = y + yOff;
+
+            this.countCutoff = countCutoff;
         }
 
         public final int x0;
@@ -150,6 +156,8 @@ public class CapDetection extends Task {
 
         public final int x1;
         public final int y1;
+
+        public final int countCutoff;
 
     }
 
