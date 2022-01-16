@@ -260,6 +260,32 @@ public class ArmSystem extends TaskLoop {
             return RobotError.ARM_NOT_IN_POSITION;
         }
 
+        public synchronized Error dumpLow(Task task) {
+            if(this.currentPos == Position.LOW) {
+                this.arm.setTargetPosition((int)Position.LOW_DUMP.motorSetting);
+                this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                this.arm.setPower(ArmDriver.motorPower);
+
+                this.currentPos = Position.LOW_DUMP;
+                return GeneralError.NO_ERROR;
+            }
+
+            return RobotError.ARM_NOT_IN_POSITION;
+        }
+        public synchronized Error dumpLowReset(Task task) {
+            if(this.currentPos == Position.LOW_DUMP) {
+                this.arm.setTargetPosition((int)this.currentPos.motorSetting);
+                this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                this.arm.setPower(ArmDriver.motorPower);
+
+                this.currentPos = Position.LOW;
+                return GeneralError.NO_ERROR;
+            }
+
+            return RobotError.ARM_NOT_IN_POSITION;
+
+        }
+
         public synchronized Error setHome(Task task) {
             Error error = super.validateCall(task);
             if(error != GeneralError.NO_ERROR)
@@ -318,7 +344,41 @@ public class ArmSystem extends TaskLoop {
             return GeneralError.NO_ERROR;
         }
         public synchronized Error setMid(Task task, boolean syncBucket) {
-            System.out.println("setMid");
+            Error error = super.validateCall(task);
+            if(error != GeneralError.NO_ERROR)
+                return error;
+
+            if(syncBucket) {
+                ServoSpeed servoRegulator = new ServoSpeed(
+                        this.bucket,
+                        this.currentPos.bucketSetting,
+                        Position.MID.bucketSetting,
+                        ArmDriver.motorPower * ArmDriver.maxMotorSpeed,
+                        AngularVelocityUnits.RAD_SEC
+                );
+
+                this.arm.setTargetPosition((int)Position.MID.motorSetting);
+                this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                TaskManager.startTask(servoRegulator);
+
+                this.arm.setPower(ArmDriver.motorPower);
+
+                while(!Thread.interrupted() && this.arm.isBusy());
+            }
+            else {
+                this.arm.setTargetPosition((int)Position.MID.motorSetting);
+                this.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                this.arm.setPower(ArmDriver.motorPower);
+
+                while(!Thread.interrupted() && this.arm.isBusy());
+
+                this.bucket.setPosition(Position.MID.bucketSetting);
+            }
+
+            this.currentPos = Position.MID;
+
             return GeneralError.NO_ERROR;
         }
         public synchronized Error setLow(Task task, boolean syncBucket) {
@@ -356,6 +416,7 @@ public class ArmSystem extends TaskLoop {
             }
 
             this.currentPos = Position.LOW;
+
             return GeneralError.NO_ERROR;
         }
 
@@ -521,6 +582,8 @@ public class ArmSystem extends TaskLoop {
             HIGH(906,0.95),
             MID(1050,.95),
             LOW(1200,0.95),
+
+            LOW_DUMP(0,0),
 
             CAP_HEIGHT(738,0.9),
             CAP_HOVER(1077, 1.0),
