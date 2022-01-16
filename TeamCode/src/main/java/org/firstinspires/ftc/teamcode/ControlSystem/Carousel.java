@@ -55,7 +55,7 @@ public class Carousel extends GamePadDriver.MomentarySwitch{
 
         public void setOn(Task task, TeleOpMode.Side side) {
             Error error = super.validateCall(task);
-            this.motor.setPower(0.2 * side.getMultiplier());
+            this.motor.setPower(0.217 * side.getMultiplier());
         }
 
         public void setOff(Task task) {

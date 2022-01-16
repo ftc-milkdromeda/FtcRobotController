@@ -76,6 +76,9 @@ public class TeleOpMode extends LinearOpMode {
 
             super.telemetry.addData("Task #", TaskManager.getNumOfTask());
             super.telemetry.addData("Side", this.side.toString());
+            super.telemetry.addData("L-x", gamePad.getLeftJoyStick_x(GamePadDriver.PadID.GAMEPAD1));
+            super.telemetry.addData("L-y", gamePad.getLeftJoyStick_y(GamePadDriver.PadID.GAMEPAD1));
+            super.telemetry.addData("R-x", gamePad.getRightJoyStick_x(GamePadDriver.PadID.GAMEPAD1));
             super.telemetry.update();
         }
 

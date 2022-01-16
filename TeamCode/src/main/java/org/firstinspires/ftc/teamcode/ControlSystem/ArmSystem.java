@@ -583,7 +583,7 @@ public class ArmSystem extends TaskLoop {
             MID(1050,.95),
             LOW(1200,0.95),
 
-            LOW_DUMP(0,0),
+            LOW_DUMP(1200,0),
 
             CAP_HEIGHT(738,0.9),
             CAP_HOVER(1077, 1.0),

@@ -32,8 +32,11 @@ public class Camera extends Driver {
     }
 
     public Framework.Images.Image takeImage(Task task) {
-        if(super.validateCall(task) != GeneralError.NO_ERROR)
+        Error error = super.validateCall(task);
+        if(error != GeneralError.NO_ERROR) {
+            this.error = error;
             return null;
+        }
 
         VuforiaLocalizer.CloseableFrame frame;
         try {
@@ -63,14 +66,16 @@ public class Camera extends Driver {
         for(int i = 0; i < pixelArray.length; i++) {
             for(int j = 0; j < pixelArray[i].length; j++)
                 pixelArray[i][j] = new RGBPixel(
-                        array[(i * pixelArray[i].length + j) * 3 + 0] / 255f,
-                        array[(i * pixelArray[i].length + j) * 3 + 1] / 255f,
-                        array[(i * pixelArray[i].length + j) * 3 + 2] / 255f
+                        Byte.toUnsignedInt(array[(i * pixelArray[i].length + j) * 3 + 0]) / 255f,
+                        Byte.toUnsignedInt(array[(i * pixelArray[i].length + j) * 3 + 1]) / 255f,
+                        Byte.toUnsignedInt(array[(i * pixelArray[i].length + j) * 3 + 2]) / 255f
                         );
         }
 
         return  new Framework.Images.Image(pixelArray);
     }
+
+    public Error error = GeneralError.NO_ERROR;
 
     private VuforiaLocalizer locale;
     private static final String key = "Ac7O/sT/////AAABmfegDDc3nUE0pRyH393dmoYsL9SH/fuutgc8rqUBYUUvEzt3vPN4UjwVcrmWAy30T8nEa8zEvDsuA03b6QLWoxRURps/uuPOUI9xeKZP17fSjCU8EjpOTEPbMEyKTY0uiR10gAlmD8lSkDBIEbKDLAWVYC9VRzPDllyxA38m8sXXZjDPfIJ4IPe1Ae+hW2x4pxCGY3qrdoM/t/41ZBYXXs/QnGpymvC6Rwqqmqu3K+xisVGxrqeJ9Fj+Ew0etzUJFpUFYXqZDPocJSLvdK1wM5fh6fqOFqdeNAM21X4ccqMGRMraIbEbwWWiabzywi3L5IsyeWU4DvuXk7dV6BKngVkj+wXcBJ2fn+2qdCNzuS7M";

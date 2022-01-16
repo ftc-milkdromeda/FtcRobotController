@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Disabled
+//@Disabled
 @TeleOp(name="TPM Tests")
 public class AutoTPMTester extends LinearOpMode {
     @Override
@@ -64,10 +64,17 @@ public class AutoTPMTester extends LinearOpMode {
                 motor3.setTargetPosition(-3000);
             }
             if(type == Type.ROTATE) {
+                /*
                 motor0.setTargetPosition(500);
                 motor1.setTargetPosition(500);
                 motor2.setTargetPosition(-500);
                 motor3.setTargetPosition(-500);
+                 */
+
+                motor0.setTargetPosition(863);
+                motor1.setTargetPosition(863);
+                motor2.setTargetPosition(-863);
+                motor3.setTargetPosition(-863);
             }
 
             motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);

@@ -32,7 +32,8 @@ public class DriveTrainAuto extends Driver {
     }
 
     public void auto_moveForward(double power, double y, LengthUnits units)  {
-        final double tickpermeter = 1685.393;
+        final double tickpermeter = 1788.908766;
+;
         final double tolerance = 0.01*tickpermeter;
 
         y = units.toBase(y);
@@ -71,7 +72,8 @@ public class DriveTrainAuto extends Driver {
         );
     }
     public void auto_strafe(double power, double x, LengthUnits units) {
-        final double tickpermeter = 1765.745;
+        final double tickpermeter = 2044.989775;
+;
         final double tolerance = 0.01*tickpermeter;
 
         x = units.toBase(x);
@@ -110,8 +112,9 @@ public class DriveTrainAuto extends Driver {
         );
     }
     public void auto_rotate(double power, double w, AngleUnits units) {
-        final double tickperrad = 393.5168;
-        final double tolerance = 0.1*tickperrad;
+        final double tickperrad = 550;
+;
+        final double tolerance = 0.05*tickperrad;
 
         w = units.toBase(w);
 

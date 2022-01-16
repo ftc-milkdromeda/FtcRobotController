@@ -101,8 +101,9 @@ public class CapDetection extends Task {
         for(int i = 0; i < imagePixelCount.length; i++)
             pos = imagePixelCount[i] >=1 && imagePixelCount[pos.getValue()] < imagePixelCount[i] ? Position.getPos(i) : pos;
 
-        this.callBack.call(imagePixelCount[pos.getValue()] > this.countCutoff ? pos : Position.NO_POS);
+        this.callBack.call(pos);
         this.setExitState(GeneralError.NO_ERROR);
+        super.interrupt();
     }
 
     private int countBlackPixel(Image image) {
@@ -123,7 +124,7 @@ public class CapDetection extends Task {
 
     private final double colorCutoffFactor  = 0.5;
     private final int countCutoff = 100;
-    private final String path = "";
+    private final String path = "/storage/self/primary/Pictures/";
     //todo set path
 
     public static class CapConfiguration {
